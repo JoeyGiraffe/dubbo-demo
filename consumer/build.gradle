@@ -1,0 +1,36 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+}
+
+group = 'orz.joey'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    //把dubbo-api打成的jar包放入当前lib/
+    implementation fileTree(dir: 'lib', includes: ['*jar'])
+
+    /**
+     * Dubbo And Zookeeper Dependencies
+     */
+    implementation group: 'org.apache.dubbo', name: 'dubbo', version: '2.7.1'
+    implementation group: 'org.apache.dubbo', name: 'dubbo-spring-boot-starter', version: '2.7.1'
+    implementation group: 'org.apache.dubbo', name: 'dubbo-dependencies-zookeeper', version: '2.7.1', ext: 'pom'
+    implementation group: 'org.apache.curator', name: 'curator-framework', version: '4.2.0'
+    implementation group: 'org.apache.curator', name: 'curator-recipes', version: '4.2.0'
+}
+
+test {
+    useJUnitPlatform()
+}

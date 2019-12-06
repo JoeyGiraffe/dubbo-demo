@@ -1,0 +1,26 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
+dependencies {
+    implementation project (":api")
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    
+    /**
+     * Dubbo And Zookeeper Dependencies
+     */
+    implementation group: 'org.apache.dubbo', name: 'dubbo-spring-boot-starter', version: '2.7.1'
+    implementation group: 'org.apache.dubbo', name: 'dubbo-dependencies-zookeeper', version: '2.7.1', ext: 'pom'
+    implementation group: 'org.apache.curator', name: 'curator-framework', version: '4.2.0'
+    implementation group: 'org.apache.curator', name: 'curator-recipes', version: '4.2.0'
+
+
+}
+
+test {
+    useJUnitPlatform()
+}

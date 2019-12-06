@@ -1,0 +1,1 @@
+> consumer作为一个单独的应用，调用dubbo接口

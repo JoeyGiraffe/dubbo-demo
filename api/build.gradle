@@ -1,0 +1,5 @@
+archivesBaseName = 'dubbo-' + archivesBaseName
+
+dependencies {
+    api group: 'org.apache.dubbo', name: 'dubbo', version: '2.7.1'
+}

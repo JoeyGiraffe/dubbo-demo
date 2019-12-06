@@ -1,0 +1,33 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java-library'
+}
+
+allprojects {
+    apply plugin: 'java-library'
+    
+    group = 'orz.joey.dubbo'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    repositories {
+        maven {
+            // 添加仓库地址
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+        }
+        mavenCentral()
+    }
+
+    [compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+    javadoc {
+        options {
+            encoding "UTF-8"
+            charSet "UTF-8"
+            author true
+//            links "http://docs.oracle.com/javase/7/docs/api"
+            title archivesBaseName + ".javadoc"
+        }
+    }
+
+}
