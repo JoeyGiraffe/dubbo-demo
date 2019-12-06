@@ -23,6 +23,9 @@ public class HomeController {
 
     @GetMapping("/send")
     public String send(@RequestParam String msg) {
+        //可使用拦截器完成traceId的设置与清除
+        TraceIdUtil.init();
+
         MessageDto msgDto = new MessageDto();
         msgDto.setMessage(msg);
         StringBuilder sb = new StringBuilder("initial traceId:" + TraceIdUtil.getTraceId());

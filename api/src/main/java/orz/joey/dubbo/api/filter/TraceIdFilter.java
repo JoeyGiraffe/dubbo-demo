@@ -8,7 +8,6 @@ import org.apache.dubbo.rpc.Invoker;
 import org.apache.dubbo.rpc.Result;
 import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.RpcException;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import orz.joey.dubbo.api.util.TraceIdUtil;
 
@@ -20,25 +19,31 @@ public class TraceIdFilter implements Filter {
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         RpcContext context = RpcContext.getContext();
         if (context.isProviderSide()) {
-            TraceIdUtil.setTraceId(context.getAttachment(TRACE_KEY));
+            String traceId = context.getAttachment(TRACE_KEY);
+            if (!StringUtils.hasLength(traceId)) traceId = TraceIdUtil.generateTraceId();
+            TraceIdUtil.setTraceId(traceId);
         } else if (context.isConsumerSide()) {
-            /**
-             * <title>不同请求有可能会使用到同一个线程</title>
-             *
-             * <blockquote>
-             * 如果我们使用完ThreadLocal对象而没有手动删掉，那么后面的请求就有机会使用到被使用过的ThreadLocal对象
-             * 如果一个请求在使用ThreadLocal的时候，是先get()来判断然后再set()，那就会有问题，因为get到的就可能是别的请求set的内容
-             * </blockquote>
+            /*
+              <p>不同请求有可能会使用到同一个线程</p>
+              <blockquote>
+              如果我们使用完ThreadLocal对象而没有手动删掉，那么后面的请求就有机会使用到被使用过的ThreadLocal对象
+              如果一个请求在使用ThreadLocal的时候，是先get()来判断然后再set()，那就会有问题，因为get到的就可能是别的请求set的内容
+              解决方案：
+                1、保证每次都用新的值覆盖线程变量
+                2、保证在每个请求结束后清空线程变量
+              </blockquote>
              */
-            String traceId = TraceIdUtil.getTraceId();
-//            Assert.notNull(traceId, "you have to set traceId before call dubbo api");
+            /*String traceId = TraceIdUtil.getTraceId();
             if (!StringUtils.hasLength(traceId)) {
                 traceId = TraceIdUtil.generateTraceId();
                 System.out.println("consumer generate traceId: " + traceId);
                 TraceIdUtil.setTraceId(traceId);
             }
+            context.setAttachment(TRACE_KEY, traceId);*/
 
-            context.setAttachment(TRACE_KEY, traceId);
+
+            //为实现一次请求中多次调用接口共用一个traceId，消费端需要自己在每一次请求开始时设置traceId
+            context.setAttachment(TRACE_KEY, TraceIdUtil.getTraceId());
         }
 
         try {

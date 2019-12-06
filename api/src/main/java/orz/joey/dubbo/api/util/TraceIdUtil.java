@@ -5,7 +5,11 @@ import java.util.UUID;
 public class TraceIdUtil {
     private static ThreadLocal<String> TRACE_ID = new ThreadLocal<>();
 
-    public static void setTraceId(String value){
+    public static void init() {
+        TRACE_ID.set(generateTraceId());
+    }
+
+    public static void setTraceId(String value) {
         TRACE_ID.set(value);
     }
 
