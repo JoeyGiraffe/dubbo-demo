@@ -28,6 +28,7 @@ public class HomeController {
 
         MessageDto msgDto = new MessageDto();
         msgDto.setMessage(msg);
+
         StringBuilder sb = new StringBuilder("initial traceId:" + TraceIdUtil.getTraceId());
         String firstCallRs = demoService.sendMessage(new BaseRqDto<>(AppNameEnum.CONSUMER, "joey", msgDto));
         sb.append("<br/>").append(firstCallRs).append("<br/>").append("traceId after first request:").append(TraceIdUtil.getTraceId());
